@@ -49,28 +49,32 @@ function readCookie()
 }
 
 
-// event listener for logout button
-document.getElementById("logoutBtn").addEventListener("click", function() {
-    // Redirect back to the login page
-    window.location.href = "index.html";
-});
+
+// show login and hide registration form
+const showLoginBtn = document.getElementById('show-login');
+if (showLoginBtn) {
+    showLoginBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    });
+}
 
 
 
-// show registration form - hide login
-document.getElementById('show-register').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('login-form').style.display = 'none';
-    document.getElementById('register-form').style.display = 'block';
-});
+// Show the registration form and hide the login form
+const showRegisterBtn = document.getElementById('show-register');
+if (showRegisterBtn) {
+    showRegisterBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+    });
+}
 
-// show login form - hide registration
 
-document.getElementById('show-login').addEventListener('click', function(e) {
-	e.preventDefault();
-	document.getElementById('register-form').style.display = 'none';
-	document.getElementById('login-form').style.display = 'block';
-});
+
+
 
 // login function
 function login() {

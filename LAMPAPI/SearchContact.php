@@ -1,21 +1,26 @@
 <?php
     $inData = getRequestInfo();
+    
+    // Search query and pagination parameters
     $search = "%" . $inData["search"] . "%";
+    $offset = isset($inData["offset"]) ? intval($inData["offset"]) : 0;
+    $limit = isset($inData["limit"]) ? intval($inData["limit"]) : 15; // Default limit is 15
 
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
 
     if ($conn->connect_error) {
         returnWithError($conn->connect_error);
     } else {
-        $stmt = $conn->prepare("SELECT Name, Phone, Email FROM Contacts WHERE Name LIKE ?");
-        $stmt->bind_param("s", $search);
+        // SQL query to fetch contacts with LIMIT and OFFSET for lazy loading
+        $stmt = $conn->prepare("SELECT Name, Phone, Email FROM Contacts WHERE Name LIKE ? LIMIT ? OFFSET ?");
+        $stmt->bind_param("sii", $search, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $searchResults = "";
         $searchCount = 0;
 
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             if ($searchCount > 0) {
                 $searchResults .= ",";
             }

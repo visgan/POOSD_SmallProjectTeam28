@@ -1,4 +1,5 @@
 <?php
+
     $inData = getRequestInfo();
 
     $login = $inData["login"];
@@ -33,6 +34,12 @@
     }
 
     function getRequestInfo() {
+
+        $input = file_get_contents('php://input');
+        error_log("Raw input: " . $input);  // Log the raw input for debugging
+
+
+
         $data = json_decode(file_get_contents('php://input'), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             returnWithError('Invalid JSON');

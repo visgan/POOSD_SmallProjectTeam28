@@ -18,48 +18,58 @@
 	<div class="container">
 		<h2 class="text-center my-4">Login to Contact Manager</h2>
 		<div class="row justify-content-center">
-			<div class="col-md-20"> 
-				<!-- Login Form --> 
+			<div class="col-md-20">
+				<!-- Login Form -->
 				<form id="login-form" class="border p-4 rounded">
 
-				<!-- Toggle to Registration --> 
-				<p class="text-center my-3">Don't have an account? <a href="#" id="show-register">Register here</a></p>
+					<!-- Toggle to Registration -->
+					<p class="text-center my-3">Don't have an account? <a href="#" id="show-register">Register here</a>
+					</p>
 
 					<div class="form-group">
 						<label for="login-username">Username:</label>
-						<input type="text" id="login-username" name="username" class="form-control" required>
+						<input type="text" id="login-username" name="username" class="form-control"
+							placeholder="Enter Username" required>
 					</div>
 					<div class="form-group">
 						<label for="login-password">Password:</label>
-						<input type="password" id="login-password" name="password" class="form-control" required>
+						<input type="password" id="login-password" name="password" class="form-control"
+							placeholder="Enter Password" required>
 					</div>
-					<button type="button" class="btn btn-primary btn-block" onclick="login()">Login</button>
+					<button type="button" class="btn btn-primary btn-block" id="login-btn">Login</button>
 				</form>
 
-			
 
-			
+
+
 				<!-- Register Form (Hidden Initially) -->
-				 
+				<!--error box-->
+				<div id="error-box" class="alert alert-danger" style="display:none;"></div>
+
+				<!--Form-->
 				<form id="register-form" class="border p-4 rounded" style="display:none;">
 					<h3 class="text-center my-4">Register</h3>
 					<div class="form-group">
 						<label for="first-name">First Name:</label>
-						<input type="text" id="first-name" name="first_name" class="form-control" required>
+						<input type="text" id="first-name" name="first_name" class="form-control"
+							placeholder="Enter First Name" required>
 					</div>
 					<div class="form-group">
 						<label for="last-name">Last Name:</label>
-						<input type="text" id="last-name" name="last_name" class="form-control" required>
+						<input type="text" id="last-name" name="last_name" class="form-control"
+							placeholder="Enter Last Name" required>
 					</div>
 					<div class="form-group">
 						<label for="register-username">Username:</label>
-						<input type="text" id="register-username" name="username" class="form-control" required>
+						<input type="text" id="register-username" name="username" class="form-control"
+							placeholder="Enter Username" required>
 					</div>
 					<div class="form-group">
 						<label for="register-password">Password:</label>
-						<input type="password" id="register-password" name="password" class="form-control" required>
+						<input type="password" id="register-password" name="password" class="form-control"
+							placeholder="Enter Password" required>
 					</div>
-					<button type="button" class="btn btn-success btn-block" onclick="register()">Register</button>
+					<button type="button" class="btn btn-success btn-block" id="register-btn">Register</button>
 					<p class="text-center my-4">Return to login. <a href="#" id="show-login">Click here</a></p>
 				</form>
 
@@ -68,16 +78,14 @@
 	</div>
 
 
-		<!-- Scripts -->
-	<!--
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	-->
+
 	<!-- Scripts -->
-	<!--
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	-->
+
+
 
 </body>
 

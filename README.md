@@ -6,3 +6,7 @@
  - Update Contact
  - Search Contact
  - Front-End
+
+## COMPLETE
+ - Add Contact
+ - Delete Contact

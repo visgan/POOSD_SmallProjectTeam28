@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () { // wrapped in DOMContentLoaded to wait for page load before executing
+document.addEventListener('DOMContentLoaded', function () {
     const urlBase = 'http://poosd.xyz/LAMPAPI';
     const extension = 'php';
 
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () { // wrapped in DOMCon
         console.warn('Register button not found on this page.');
     }
 
-    // show login and hide registration form
+    // Show login and hide registration form
     const showLoginBtn = document.getElementById('show-login');
     if (showLoginBtn) {
         showLoginBtn.addEventListener('click', function (e) {
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () { // wrapped in DOMCon
         });
     }
 
-    // show the registration form and hide the login form
+    // Show the registration form and hide the login form
     const showRegisterBtn = document.getElementById('show-register');
     if (showRegisterBtn) {
         showRegisterBtn.addEventListener('click', function (e) {
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () { // wrapped in DOMCon
             password: document.getElementById("login-password").value.trim()
         };
 
-        // validate input fields
+        // Validate input fields
         if (!loginData.login || !loginData.password) {
             return;
         }
@@ -206,4 +206,7 @@ document.addEventListener('DOMContentLoaded', function () { // wrapped in DOMCon
                 console.error("Error:", error);
             });
     }
+
+
+
 });

@@ -4,14 +4,24 @@ const limit = 15; // Number of contacts to load at a time
 let isLoading = false;
 let allContactsLoaded = false;
 
+// throttle for lazy loading
+function throttle(fn, wait) {
+    let lastTime = 0;
+    return function (...args) {
+        const now = new Date().getTime();
+        if (now - lastTime >= wait) {
+            lastTime = now;
+            fn(...args);
+        }
+    };
+}
 
 
-
-    // check userID cookie
-    if (!getCookie('userId')) {
-        // redirect to login if cookie does not exist
-        window.location.href = 'index.html';
-    }
+// check userID cookie
+if (!getCookie('userId')) {
+    // redirect to login if cookie does not exist
+    window.location.href = 'index.html';
+}
 
 
 // get cookie function
@@ -72,13 +82,19 @@ async function addContact() {
         const data = await response.json();
         // verify contact was added
         if (data.error === "") {
-            document.getElementById('contactAddResult').innerHTML = "Contact added successfully";
             // clear fields after adding contact
             document.getElementById('contact-name').value = '';
             document.getElementById('contact-phone').value = '';
             document.getElementById('contact-email').value = '';
             // add new contact at the bottom of the table
             addContactToTable(data.id, name, phone, email);
+            // display success message and wait 1 second before reloading
+            document.getElementById('contactAddResult').innerHTML = "Contact added successfully";
+            setTimeout(() => {
+                console.log("successfully added");
+                window.location.reload(); // Reload the page after the delay
+            }, 1000); // 1000ms = 1 second delay
+            
         } else {
             document.getElementById('contactAddResult').innerHTML = "Error: " + data.error;
         }
@@ -241,7 +257,7 @@ function logout() {
     window.location.href = "index.html";
 }
 
-
+/*
 // lazy load contacts when the user scrolls to the bottom
 window.addEventListener('scroll', () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading && !allContactsLoaded) {
@@ -249,3 +265,81 @@ window.addEventListener('scroll', () => {
     }
 });
 
+*/
+
+// Load contacts on page load
+window.onload = function () {
+    loadContacts();
+
+    window.addEventListener('scroll', throttle(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading && !allContactsLoaded) {
+            loadContacts();
+        }
+    }, 200));
+};
+
+// Search Function
+async function searchContacts() {
+    const searchQuery = document.getElementById('search-input').value.trim();
+    const userId = getUserIDCookie('userId');
+    
+    if (!searchQuery) {
+        document.getElementById('searchResult').innerHTML = "Please enter a name to search";
+        return;
+    }
+
+    const searchData = {
+        search: searchQuery,
+        offset: 0,
+        limit: 50   // search return limit
+    };
+
+    try {
+        const response = await fetch('../LAMPAPI/SearchContact.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchData)
+        });
+
+        const data = await response.json();
+
+        if (data.error === "") {
+            displaySearchResults(data.results);
+        } else {
+            document.getElementById('searchResult').innerHTML = "Error: " + data.error;
+        }
+    } catch (error) {
+        console.error("Error searching contacts:", error);
+        document.getElementById('searchResult').innerHTML = "Search Failed";
+    }
+}
+
+// display results in table
+function displaySearchResults(contacts) {
+    const contactsBody = document.getElementById('contacts-body');
+    contactsBody.innerHTML = ''; // clear previous results
+
+    contacts.forEach(contact => {
+        const row = document.createElement('tr');
+        row.setAttribute('id', `contact-row-${contact.id}`);
+
+        row.innerHTML = `
+            <td>${contact.name}</td>
+            <td>${contact.phone}</td>
+            <td>${contact.email}</td>
+            <td>
+                <button class="btn btn-warning btn-sm" onclick="editContact('${contact.id}', '${contact.name}', '${contact.phone}', '${contact.email}')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteContact(${contact.id})">Delete</button>
+            </td>
+        `;
+
+        contactsBody.appendChild(row);
+    });
+}
+
+// reload page function for search tab
+function reloadPage() {
+    window.location.reload();
+}

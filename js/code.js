@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             document.getElementById('register-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
+            clearErrorBox(); // clear error message
         });
     }
 
@@ -129,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('register-form').style.display = 'block';
+            clearErrorBox();
         });
     }
 
@@ -206,7 +208,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Error:", error);
             });
     }
-
-
-
 });
+
+// clear error box funciton
+function clearErrorBox() {
+    const errorBox = document.getElementById('error-box');
+    errorBox.innerHTML = '';
+    errorBox.style.display = 'none';
+}

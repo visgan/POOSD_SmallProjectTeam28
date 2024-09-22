@@ -1,66 +1,65 @@
-
 let offset = 0;
 const limit = 15; // Number of contacts to load at a time
 let isLoading = false;
 let allContactsLoaded = false;
 
 // throttle for lazy loading
-function throttle(fn, wait) {
+function throttle(fn, wait) 
+{
     let lastTime = 0;
-    return function (...args) {
+    return function (...args) 
+    {
         const now = new Date().getTime();
-        if (now - lastTime >= wait) {
+        if (now - lastTime >= wait) 
+        {
             lastTime = now;
             fn(...args);
         }
     };
 }
 
-
 // check userID cookie
-if (!getCookie('userId')) {
+if (!getCookie('userId')) 
+{
     // redirect to login if cookie does not exist
     window.location.href = 'index.html';
 }
 
-
 // get cookie function
-function getCookie(name) {
+function getCookie(name) 
+{
     const cookieArr = document.cookie.split(';');
-    for (let i = 0; i < cookieArr.length; i++) {
+    for (let i = 0; i < cookieArr.length; i++) 
+        {
         const cookiePair = cookieArr[i].split('=');
         const cookieName = cookiePair[0].trim();
 
-        if (cookieName === name) {
+        if (cookieName === name) 
+        {
             return decodeURIComponent(cookiePair[1]);
         }
     }
     return null;
 }
 
-
-// Load contacts if the user is logged in
-//loadContacts();
-
-
 // working with window.onload now - left the old one commented out above ^^^
-window.onload = function () {
+window.onload = function () 
+{
     loadContacts();
 };
 
-
-
-
 // add contacts function
-async function addContact() {
+async function addContact() 
+{
     // get values from input fields
     const name = document.getElementById('contact-name').value.trim();
     const phone = document.getElementById('contact-phone').value.trim();
     const email = document.getElementById('contact-email').value.trim();
     const userId = getUserIDCookie('userId');
     // make sure all fields are filled oout
-    if (!name || !phone || !email) {
-        document.getElementById('contactAddResult').innerHTML = "All fields are required.";
+    if (!name || !phone || !email)  
+    {
+        document.getElementById('contactAddResult').innerHTML = '<div class="alert alert-danger" role="alert">All fields are required!</div>';
         return;
     }
     // format data for backend
@@ -70,18 +69,22 @@ async function addContact() {
         email: email,
         userId: userId
     };
-    try {
+    try 
+    {
         // fetch request to AddContact.php
-        const response = await fetch('../LAMPAPI/AddContact.php', {
+        const response = await fetch('../LAMPAPI/AddContact.php', 
+        {
             method: 'POST',
-            headers: {
+            headers: 
+            {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(contactData)
         });
         const data = await response.json();
         // verify contact was added
-        if (data.error === "") {
+        if (data.error === "") 
+        {
             // clear fields after adding contact
             document.getElementById('contact-name').value = '';
             document.getElementById('contact-phone').value = '';
@@ -89,42 +92,50 @@ async function addContact() {
             // add new contact at the bottom of the table
             addContactToTable(data.id, name, phone, email);
             // display success message and wait 1 second before reloading
-            document.getElementById('contactAddResult').innerHTML = "Contact added successfully";
-            setTimeout(() => {
+            document.getElementById('contactAddResult').innerHTML = '<div class="alert alert-success" role="alert">Contact added successfully</div>';
+            setTimeout(() => 
+            {
                 console.log("successfully added");
                 window.location.reload(); // Reload the page after the delay
-            }, 1000); // 1000ms = 1 second delay
+            }, 1000); // 1 second delay (1000ms)
             
-        } else {
+        }
+        else 
+        {
             document.getElementById('contactAddResult').innerHTML = "Error: " + data.error;
         }
-    } catch (error) {
+    }
+    catch (error) 
+    {
         console.error("Error adding contact:", error);
         document.getElementById('contactAddResult').innerHTML = "Failed to add contact";
     }
 }
 
 // Helper function to get the userId from cookies
-// redundant but works better this way for some reason?
-function getUserIDCookie(name) {
+function getUserIDCookie(name) 
+{
     const cookieArr = document.cookie.split(";");
-    for (let i = 0; i < cookieArr.length; i++) {
+    for (let i = 0; i < cookieArr.length; i++) 
+    {
         let cookiePair = cookieArr[i].split("=");
-        if (name === cookiePair[0].trim()) {
+        if (name === cookiePair[0].trim()) 
+        {
             return decodeURIComponent(cookiePair[1]);
         }
     }
     return null;
 }
 
-// update table with new contact
-function addContactToTable(id, name, phone, email) {
+// Update table with new contact
+function addContactToTable(id, name, phone, email) 
+{
     const contactsBody = document.getElementById('contacts-body');
-    // create new row
+    // Create new row
     const row = document.createElement('tr');
     row.setAttribute('id', `contact-row-${id}`);
 
-    // populate row
+    // Populate row
     row.innerHTML = `
         <td>${name}</td>
         <td>${phone}</td>
@@ -134,100 +145,105 @@ function addContactToTable(id, name, phone, email) {
             <button class="btn btn-danger btn-sm" onclick="deleteContact(${id})">Delete</button>
         </td>
     `;
-    // append to table
+    // Append to table
     contactsBody.appendChild(row);
 }
 
-
 // delete contacts function
-async function deleteContact(contactId) {
-    // Log the contactId to verify it's the correct one
-    console.log("Contact ID to delete:", contactId);
-
+async function deleteContact(contactId) 
+{
     // confirm deletion
     const confirmation = confirm("Are you sure you want to delete this contact?");
-
-    if (!confirmation) {
+    if (!confirmation) 
+    {
         return; //exit if no
     }
-
-    try {
+    try 
+    {
         // send request for deletion
-        const response = await fetch('../LAMPAPI/DeleteContact.php', {
+        const response = await fetch('../LAMPAPI/DeleteContact.php', 
+        {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ id: contactId })
         });
-
         const data = await response.json();
+        if (data.error === "") 
+        {
+            document.getElementById('contactAddResult').innerHTML = '<div class="alert alert-danger" role="alert">Contact deleted successfully</div>';
 
-        if (data.error === "") {
-            document.getElementById('contactAddResult').innerHTML = "Contact deleted successfully";
-
-            // Remove the contact row from the DOM (assuming rows have id attributes)
+            // delete row
             const contactRow = document.getElementById('contact-row-' + contactId);
-            if (contactRow) {
+            if (contactRow) 
+            {
                 contactRow.remove();
             }
-        } else {
+        }
+        else
+        {
             document.getElementById('contactAddResult').innerHTML = "Error: " + data.error;
         }
-    } catch (error) {
+    }
+    catch (error)
+    {
         console.error("Error deleting contact:", error);
         document.getElementById('contactAddResult').innerHTML = "Failed to delete contact";
     }
 }
 
-
-
 // lazy load contacts on page load
-function loadContacts() {
+function loadContacts()
+{
     if (isLoading || allContactsLoaded) return;  // Prevent loading if already loading or all loaded
-
     isLoading = true;
-    fetch('../LAMPAPI/SearchContact.php', {
+    fetch('../LAMPAPI/SearchContact.php',
+    {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ search: "", offset: offset, limit: limit })
     })
         .then(response => response.json())
-        .then(data => {
+        .then(data => 
+        {
             isLoading = false;
-            if (data.error === "") {
-                if (data.results.length < limit) {
+            if (data.error === "")
+            {
+                if (data.results.length < limit)
+                {
                     // If the number of results is less than the limit, it means we've reached the end
                     allContactsLoaded = true;
                 }
                 displayContacts(data.results);
                 offset += limit;  // Update offset for the next load
-            } else if (data.error === "No Records Found") {
+            }
+            else if (data.error === "No Records Found")
+            {
                 allContactsLoaded = true;  // Stop further loading
-            } else {
+            }
+            else
+            {
                 alert(data.error);
             }
         })
-        .catch(error => {
+        .catch(error =>
+        {
             isLoading = false;
             console.error('Error:', error);
         });
-
     isLoading = false;
 }
 
-
-
 // display contacts in the table
-function displayContacts(contacts) {
+function displayContacts(contacts)
+{
     const contactsBody = document.getElementById('contacts-body');
-    //contactsBody.innerHTML = ''; // Clear previous table rows
-
-    contacts.forEach(contact => {
+    contacts.forEach(contact =>
+    {
         // create rows
         const row = document.createElement('tr');
         row.setAttribute('id', `contact-row-${contact.id}`); // set an ID for each row
-
         // display row data
         row.innerHTML = `
             <td>${contact.name}</td>
@@ -242,89 +258,95 @@ function displayContacts(contacts) {
     });
 }
 
-function clearCookie(name) {
+// Clear cookie
+function clearCookie(name)
+{
     // set cookie expiration to the past to clear it
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
 }
 
-function logout() {
+// Logout function
+function logout()
+{
     // clear the cookies
     clearCookie("firstName");
     clearCookie("lastName");
     clearCookie("userId");
-
     // redirect to login page
     window.location.href = "index.html";
 }
 
-/*
-// lazy load contacts when the user scrolls to the bottom
-window.addEventListener('scroll', () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading && !allContactsLoaded) {
-        loadContacts();
-    }
-});
-
-*/
-
 // Load contacts on page load
-window.onload = function () {
+window.onload = function ()
+{
     loadContacts();
-
-    window.addEventListener('scroll', throttle(() => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading && !allContactsLoaded) {
+    window.addEventListener('scroll', throttle(() =>
+    {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading && !allContactsLoaded)
+        {
             loadContacts();
         }
-    }, 200));
+    }, 50));
 };
 
 // Search Function
-async function searchContacts() {
-    const searchQuery = document.getElementById('search-input').value.trim();
-    const userId = getUserIDCookie('userId');
-    
-    if (!searchQuery) {
-        document.getElementById('searchResult').innerHTML = "Please enter a name to search";
+async function searchContacts()
+{
+    const searchQuery = document.getElementById('search-input').value.trim(); // Get search input
+    if (!searchQuery) // Verify search query entered and warn if none
+    {
+        document.getElementById('searchResult').innerHTML = '<div class="alert alert-danger" role="alert">Please enter a name to search</div>';
         return;
     }
-
-    const searchData = {
+    const searchData =
+    {
         search: searchQuery,
         offset: 0,
         limit: 50   // search return limit
     };
-
-    try {
-        const response = await fetch('../LAMPAPI/SearchContact.php', {
+    try
+    {
+        const response = await fetch('../LAMPAPI/SearchContact.php',
+        {
             method: 'POST',
-            headers: {
+            headers: 
+            {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(searchData)
         });
-
         const data = await response.json();
-
-        if (data.error === "") {
+        if (data.error === "") 
+        {
             displaySearchResults(data.results);
-        } else {
-            document.getElementById('searchResult').innerHTML = "Error: " + data.error;
+        } 
+        else 
+        {
+            document.getElementById('searchResult').innerHTML = '<div class="alert alert-danger" role="alert">Contact not found!</div>';
+            setTimeout(() => 
+                {
+                    console.log("Contact not found");
+                    window.location.reload(); // Reload the page after the delay
+                }, 1000); // 1 second delay (1000ms)
         }
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.error("Error searching contacts:", error);
         document.getElementById('searchResult').innerHTML = "Search Failed";
     }
 }
 
-// display results in table
-function displaySearchResults(contacts) {
+// Display search results in table
+function displaySearchResults(contacts) 
+{
     const contactsBody = document.getElementById('contacts-body');
-    contactsBody.innerHTML = ''; // clear previous results
-
-    contacts.forEach(contact => {
-        const row = document.createElement('tr');
-        row.setAttribute('id', `contact-row-${contact.id}`);
-
+    contactsBody.innerHTML = ''; // Clear previous results
+    contacts.forEach(contact => 
+    {
+        const row = document.createElement('tr'); // Create table row
+        row.setAttribute('id', `contact-row-${contact.id}`); // Set row attribute
+        // Set row html
         row.innerHTML = `
             <td>${contact.name}</td>
             <td>${contact.phone}</td>
@@ -334,12 +356,105 @@ function displaySearchResults(contacts) {
                 <button class="btn btn-danger btn-sm" onclick="deleteContact(${contact.id})">Delete</button>
             </td>
         `;
-
         contactsBody.appendChild(row);
     });
 }
 
-// reload page function for search tab
-function reloadPage() {
+// Reload page function (search tab)
+function reloadPage() 
+{
     window.location.reload();
+}
+
+// Edit contact function -- handles edit button press
+function editContact(contactId, currentName, currentPhone, currentEmail) 
+{
+    // get row ID
+    const row = document.getElementById(`contact-row-${contactId}`);
+    // create pre-populated editable text fields
+    row.innerHTML = `
+        <td><input type="text" id="edit-name-${contactId}" value="${currentName}" class="form-control"></td>
+        <td><input type="text" id="edit-phone-${contactId}" value="${currentPhone}" class="form-control"></td>
+        <td><input type="email" id="edit-email-${contactId}" value="${currentEmail}" class="form-control"></td>
+        <td>
+            <button class="btn btn-success btn-sm" onclick="saveContact(${contactId})">Save</button>
+            <button class="btn btn-secondary btn-sm" onclick="cancelEdit(${contactId}, '${currentName}', '${currentPhone}', '${currentEmail}')">Cancel</button>
+        </td>
+    `;
+}
+
+// Cancel edit function
+function cancelEdit(contactId, name, phone, email) 
+{
+    // Get row ID and revert to original state
+    const row = document.getElementById(`contact-row-${contactId}`);
+    row.innerHTML = `
+        <td>${name}</td>
+        <td>${phone}</td>
+        <td>${email}</td>
+        <td>
+            <button class="btn btn-warning btn-sm" onclick="editContact('${contactId}', '${name}', '${phone}', '${email}')">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteContact(${contactId})">Delete</button>
+        </td>
+    `;
+}
+
+// Save edited contact function
+async function saveContact(contactId) 
+{
+    // Get updated values
+    const updatedName = document.getElementById(`edit-name-${contactId}`).value.trim();
+    const updatedPhone = document.getElementById(`edit-phone-${contactId}`).value.trim();
+    const updatedEmail = document.getElementById(`edit-email-${contactId}`).value.trim();
+    // Verify no empty fields
+    if (!updatedName || !updatedPhone || !updatedEmail) 
+    {
+        alert("All fields are required!");
+        return;
+    }
+    // Format new data
+    const updatedContactData = 
+    {
+        id: contactId,
+        name: updatedName,
+        phone: updatedPhone,
+        email: updatedEmail
+    };
+    try 
+    {
+        // send updated contact to DB via POST
+        const response = await fetch('../LAMPAPI/EditContact.php', 
+        {
+            method: 'POST',
+            headers: 
+            {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedContactData)
+        });
+        const data = await response.json();
+        if (data.error === "") 
+        {
+            // Show updated info in row
+            const row = document.getElementById(`contact-row-${contactId}`);
+            row.innerHTML = `
+                <td>${updatedName}</td>
+                <td>${updatedPhone}</td>
+                <td>${updatedEmail}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editContact('${contactId}', '${updatedName}', '${updatedPhone}', '${updatedEmail}')">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteContact(${contactId})">Delete</button>
+                </td>
+            `;
+        } 
+        else 
+        {
+            alert("Error: " + data.error);
+        }
+    } 
+    catch (error) 
+    {
+        console.error("Error saving contact:", error);
+        alert("Failed to update contact");
+    }
 }

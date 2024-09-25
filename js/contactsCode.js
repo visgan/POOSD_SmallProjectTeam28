@@ -1,5 +1,5 @@
 let offset = 0;
-const limit = 15; // Number of contacts to load at a time
+const limit = 20; // Number of contacts to load at a time
 let isLoading = false;
 let allContactsLoaded = false;
 
@@ -59,7 +59,12 @@ async function addContact()
     // make sure all fields are filled oout
     if (!name || !phone || !email)  
     {
-        document.getElementById('contactAddResult').innerHTML = '<div class="alert alert-danger" role="alert">All fields are required!</div>';
+        document.getElementById('contactAddResult').innerHTML = '<div class="alert alert-danger" role="alert">All fields are required</div>';
+        setTimeout(() => 
+            {
+                console.log("No search term entered");
+                document.getElementById('contactAddResult').innerHTML = '';
+            }, 1500); // 1.5 second delay (1500ms)
         return;
     }
     // format data for backend
@@ -173,7 +178,6 @@ async function deleteContact(contactId)
         if (data.error === "") 
         {
             document.getElementById('contactAddResult').innerHTML = '<div class="alert alert-danger" role="alert">Contact deleted successfully</div>';
-
             // delete row
             const contactRow = document.getElementById('contact-row-' + contactId);
             if (contactRow) 
@@ -296,6 +300,11 @@ async function searchContacts()
     if (!searchQuery) // Verify search query entered and warn if none
     {
         document.getElementById('searchResult').innerHTML = '<div class="alert alert-danger" role="alert">Please enter a name to search</div>';
+        setTimeout(() => 
+            {
+                console.log("No search term entered");
+                document.getElementById('searchResult').innerHTML = '';
+            }, 1500); // 1.5 second delay (1500ms)
         return;
     }
     const searchData =
@@ -326,8 +335,8 @@ async function searchContacts()
             setTimeout(() => 
                 {
                     console.log("Contact not found");
-                    window.location.reload(); // Reload the page after the delay
-                }, 1000); // 1 second delay (1000ms)
+                    document.getElementById('searchResult').innerHTML = '';
+                }, 1500); // 1 second delay (1000ms)
         }
     } 
     catch (error) 
@@ -340,7 +349,7 @@ async function searchContacts()
 // Display search results in table
 function displaySearchResults(contacts) 
 {
-    const contactsBody = document.getElementById('contacts-body');
+    const contactsBody = document.getElementById('contacts-body'); // Get relavant part of page (contacts table)
     contactsBody.innerHTML = ''; // Clear previous results
     contacts.forEach(contact => 
     {

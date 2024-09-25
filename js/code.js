@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
             document.getElementById('register-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
             clearErrorBox(); // clear error message
+            clearMessageBox();
         });
     }
 
@@ -173,6 +174,14 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
         const errorBox = document.getElementById('error-box');
         errorBox.innerHTML = '';
         errorBox.style.display = 'none';
+    }
+
+    // clear error box funciton
+    function clearMessageBox() 
+    {
+        const loginBox = document.getElementById('message-box');
+        loginBox.innerHTML = '';
+        loginBox.style.display = 'none';
     }
 
     // Login function
@@ -228,6 +237,8 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
     // Registration function
     function register(firstName, lastName, login, password)
     {
+        //let registerMessage = "";
+
         const registerData =
         {
             login: login,
@@ -238,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
 
         // send to Register.php
         fetch('../LAMPAPI/Register.php',
-            {
+        {
             method: 'POST',
             headers:
             {
@@ -248,12 +259,26 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
         })
             .then(response => response.json())
             .then(data => 
-                {
+            {
                 if (data.error === "")
                 {
-                    alert("Registration Successful!");
-                    document.getElementById('register-form').style.display = 'none';
-                    document.getElementById('login-form').style.display = 'block';
+                    const successBox = document.getElementById('message-box');
+                    successBox.innerHTML = "Registration Successful!";
+                    successBox.style.display = 'block';
+                    setTimeout(() => 
+                        {
+                            successBox.style.display = 'none';
+                        }, 3000); // 3 second delay (3000ms)
+                }
+                else if (data.error === "Username already exists")
+                {
+                    const errorBox = document.getElementById('error-box');
+                    errorBox.innerHTML = "Error: Username Already Exists. Please choose a different one.";
+                    errorBox.style.display = 'block';
+                    setTimeout(() => 
+                        {
+                            errorBox.style.display = 'none';
+                        }, 3000); // 3 second delay (3000ms)
                 }
                 else
                 {
@@ -262,9 +287,10 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
                     errorBox.style.display = 'block';
                 }
             })
-            .catch(error =>
-            {
+            .catch(error => {
                 console.error("Error:", error);
+                document.getElementById('error-box').innerHTML = "An unexpected error occurred.";
+                document.getElementById('error-box').style.display = 'block';
             });
     }
 });

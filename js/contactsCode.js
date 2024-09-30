@@ -146,7 +146,7 @@ function addContactToTable(id, name, phone, email)
         <td>${phone}</td>
         <td>${email}</td>
         <td>
-            <button class="btn btn-warning btn-sm" onclick="editContact('${id}', '${name}', '${phone}', '${email}')">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="editContact('${id}', '${name}', '${phone}', '${email}')">Edit</button>
             <button class="btn btn-danger btn-sm" onclick="deleteContact(${id})">Delete</button>
         </td>
     `;
@@ -254,7 +254,7 @@ function displayContacts(contacts)
             <td>${contact.phone}</td>
             <td>${contact.email}</td>
             <td>
-                <button class="btn btn-warning btn-sm" onclick="editContact('${contact.id}', '${contact.name}', '${contact.phone}', '${contact.email}')">Edit</button>
+                <button class="btn btn-primary btn-sm" onclick="editContact('${contact.id}', '${contact.name}', '${contact.phone}', '${contact.email}')">Edit</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteContact(${contact.id})">Delete</button>
             </td>
         `;
@@ -361,7 +361,7 @@ function displaySearchResults(contacts)
             <td>${contact.phone}</td>
             <td>${contact.email}</td>
             <td>
-                <button class="btn btn-warning btn-sm" onclick="editContact('${contact.id}', '${contact.name}', '${contact.phone}', '${contact.email}')">Edit</button>
+                <button class="btn btn-primary btn-sm" onclick="editContact('${contact.id}', '${contact.name}', '${contact.phone}', '${contact.email}')">Edit</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteContact(${contact.id})">Delete</button>
             </td>
         `;
@@ -402,7 +402,7 @@ function cancelEdit(contactId, name, phone, email)
         <td>${phone}</td>
         <td>${email}</td>
         <td>
-            <button class="btn btn-warning btn-sm" onclick="editContact('${contactId}', '${name}', '${phone}', '${email}')">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="editContact('${contactId}', '${name}', '${phone}', '${email}')">Edit</button>
             <button class="btn btn-danger btn-sm" onclick="deleteContact(${contactId})">Delete</button>
         </td>
     `;
@@ -451,7 +451,7 @@ async function saveContact(contactId)
                 <td>${updatedPhone}</td>
                 <td>${updatedEmail}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm" onclick="editContact('${contactId}', '${updatedName}', '${updatedPhone}', '${updatedEmail}')">Edit</button>
+                    <button class="btn btn-primary btn-sm" onclick="editContact('${contactId}', '${updatedName}', '${updatedPhone}', '${updatedEmail}')">Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteContact(${contactId})">Delete</button>
                 </td>
             `;

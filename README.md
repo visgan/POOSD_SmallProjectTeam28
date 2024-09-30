@@ -2,5 +2,5 @@
 
 
 ## COMPLETE
- - Contacts CrUDS
+ - Contacts CRUDS
  - Login/Register

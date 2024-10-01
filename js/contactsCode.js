@@ -177,7 +177,6 @@ async function deleteContact(contactId)
         const data = await response.json();
         if (data.error === "") 
         {
-            document.getElementById('contactAddResult').innerHTML = '<div class="alert alert-danger" role="alert">Contact deleted successfully</div>';
             // delete row
             const contactRow = document.getElementById('contact-row-' + contactId);
             if (contactRow) 

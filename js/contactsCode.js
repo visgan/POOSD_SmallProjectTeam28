@@ -344,6 +344,9 @@ async function searchContacts()
         console.error("Error searching contacts:", error);
         document.getElementById('searchResult').innerHTML = "Search Failed";
     }
+
+     // Clear the search input field after performing the search
+    document.getElementById('search-input').value = '';
 }
 
 // Display search results in table

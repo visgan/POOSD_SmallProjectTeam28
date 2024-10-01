@@ -151,6 +151,11 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
             document.getElementById('register-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
             clearErrorBox(); // clear error message
+             // Clear register form inputs
+             document.getElementById('first-name').value = '';
+             document.getElementById('last-name').value = '';
+             document.getElementById('register-username').value = '';
+             document.getElementById('register-password').value = '';
             clearMessageBox();
         });
     }
@@ -164,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function () // wait for page load 
             e.preventDefault();
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('register-form').style.display = 'block';
+            // Clear login form inputs
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
             clearErrorBox();
         });
     }

@@ -346,7 +346,7 @@ async function searchContacts()
     }
 
      // Clear the search input field after performing the search
-    document.getElementById('search-input').value = '';
+    // document.getElementById('search-input').value = '';
 }
 
 // Display search results in table
